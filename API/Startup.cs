@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using API.Extensions;
 using API.Middleware;
+using API.SignalR;
 
 namespace API
 {
@@ -40,6 +41,7 @@ namespace API
             services.AddControllers();
             services.AddCors();
             services.AddIdentityServices(_config);
+            services.AddSignalR();
             
         }
 
@@ -52,7 +54,10 @@ namespace API
 
             app.UseRouting();
 
-            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+            app.UseCors(x => x.AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .WithOrigins("https://localhost:4200"));
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -60,6 +65,8 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<PresenceHub>("hubs/presence");
+                endpoints.MapHub<MessageHub>("hubs/message");
             });
         }
     }
