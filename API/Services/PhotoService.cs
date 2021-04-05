@@ -28,7 +28,7 @@ namespace API.Services
         {
             var uploadResult = new ImageUploadResult();
 
-            if (file.Length > 0) 
+            if (file.Length > 0)
             {
                using var stream = file.OpenReadStream();
 
@@ -46,7 +46,7 @@ namespace API.Services
         public async Task<DeletionResult> DeletePhotoAsync(string publicId)
         {
             var deleteParams = new DeletionParams(publicId);
-
+        
             var result = await _cloudinary.DestroyAsync(deleteParams);
 
             return result;
